@@ -1,4 +1,4 @@
-package com.sharik.admin_microservice_sharik;
+package com.mary.product_microservice_sharik;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
