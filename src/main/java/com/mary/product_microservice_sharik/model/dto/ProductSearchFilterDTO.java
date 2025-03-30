@@ -56,6 +56,13 @@ public class ProductSearchFilterDTO {
         this.sortDirection = (sortDirection == null) ? Sort.Direction.ASC : sortDirection;
     }
 
+    public static ProductSearchFilterDTO defaultFilter() {
+        return new ProductSearchFilterDTO(
+                null, null,
+                null, null,
+                null, null, null);
+    }
+
     @Override
     public String toString() {
         return "ProductSearchFilterDTO{" +

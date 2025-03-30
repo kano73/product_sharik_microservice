@@ -7,6 +7,8 @@ import com.mary.product_microservice_sharik.model.dto.ProductSearchFilterDTO;
 import com.mary.product_microservice_sharik.model.dto.SetProductStatusDTO;
 import com.mary.product_microservice_sharik.model.entity.Product;
 import com.mary.product_microservice_sharik.repository.ProductRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +27,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public List<Product> getProductsByFilterOnPage(@NotNull ProductSearchFilterDTO dto) {
+    public List<Product> findProductsByFilterOnPage(@NotNull ProductSearchFilterDTO dto) {
         Integer priceFrom = dto.getPriceFrom()==null? null : dto.getPriceFrom().intValue();
         Integer priceTo = dto.getPriceTo()==null? null : dto.getPriceTo().intValue();
 
@@ -41,7 +43,7 @@ public class ProductService {
         ).getContent();
     }
 
-    public void setProductStatus(SetProductStatusDTO dto) {
+    public void setProductStatus(@Valid @NotNull SetProductStatusDTO dto) {
         Product product = productRepository.findById(dto.getProductId()).orElseThrow(
                 ()-> new NoDataFoundException("no product found with id: "+dto.getProductId())
         );
@@ -49,7 +51,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public Product create(AddProductDTO dto) {
+    public void create(@Valid @NotNull AddProductDTO dto) {
         Product product = new Product();
         product.setAvailable(false);
         product.setCategories(dto.getCategories());
@@ -60,10 +62,10 @@ public class ProductService {
 
         product.setPrice((int) Math.round(dto.getPrice()) * (int) Math.pow(10,DIGITS_AFTER_COMA));
 
-        return productRepository.save(product);
+        productRepository.save(product);
     }
 
-    public Product findById(String id) {
+    public Product findById(@NotBlank String id) {
         return productRepository.findById(id).orElseThrow(
                 () -> new NoDataFoundException("no product found with id: "+id)
         );
