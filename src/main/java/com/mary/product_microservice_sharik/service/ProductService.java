@@ -23,7 +23,6 @@ import java.util.List;
 public class ProductService {
     @Value("${page.size.product}")
     private Integer PAGE_SIZE;
-    private final Integer DIGITS_AFTER_COMA = PriceProperties.AFTER_COMA;
 
     private final ProductRepository productRepository;
 
@@ -60,7 +59,7 @@ public class ProductService {
         product.setAmountLeft(dto.getAmountLeft());
         product.setImageUrl(dto.getImageUrl());
 
-        product.setPrice((int) Math.round(dto.getPrice()) * (int) Math.pow(10,DIGITS_AFTER_COMA));
+        product.setPrice((int) Math.round(dto.getPrice()) * (int) Math.pow(10, PriceProperties.AFTER_COMA));
 
         productRepository.save(product);
     }
