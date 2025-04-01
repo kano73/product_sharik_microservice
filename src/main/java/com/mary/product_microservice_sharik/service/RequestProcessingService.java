@@ -2,6 +2,7 @@ package com.mary.product_microservice_sharik.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import com.mary.product_microservice_sharik.model.dto.AddProductDTO;
 import com.mary.product_microservice_sharik.model.dto.ProductSearchFilterDTO;
 import com.mary.product_microservice_sharik.model.dto.SetProductStatusDTO;
@@ -30,7 +31,7 @@ public class RequestProcessingService {
 
         } catch (Exception e) {
             sendResponse(message, "exception while parsing data from request", true);
-            throw e;
+            return;
         }
         // Обрабатываем запрос
         productService.create(newProductDTO);
@@ -44,7 +45,7 @@ public class RequestProcessingService {
             filter = filter == null ? ProductSearchFilterDTO.defaultFilter(): filter;
         } catch (Exception e) {
             sendResponse(message, "exception while parsing data from request", true);
-            throw e;
+            return;
         }
         // Обрабатываем запрос
         List<Product> products = productService.findProductsByFilterOnPage(filter);
@@ -59,7 +60,7 @@ public class RequestProcessingService {
 
         } catch (Exception e) {
             sendResponse(message, "exception while parsing data from request",true);
-            throw e;
+            return;
         }
 
         // Обрабатываем запрос
@@ -68,13 +69,29 @@ public class RequestProcessingService {
         sendResponse(message, product, false);
     }
 
+    public void sendProductsByIds(ConsumerRecord<String, String> message) throws JsonProcessingException {
+        List<String> ids;
+        try {
+            CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, String.class);
+            ids = objectMapper.readValue(message.value(), listType);
+        } catch (Exception e) {
+            sendResponse(message, "exception while parsing data from request",true);
+            return;
+        }
+
+        // Обрабатываем запрос
+        List<Product> products = productService.findProductsByIds(ids);
+
+        sendResponse(message, products, false);
+    }
+
     public void setProductStatus(ConsumerRecord<String, String> message) throws JsonProcessingException {
         SetProductStatusDTO productStatusDTO;
         try {
             productStatusDTO = objectMapper.readValue(message.value(), SetProductStatusDTO.class);
         } catch (Exception e) {
             sendResponse(message, "exception while parsing data from request", true);
-            throw e;
+            return;
         }
 
         // Обрабатываем запрос

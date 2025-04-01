@@ -69,4 +69,8 @@ public class ProductService {
                 () -> new NoDataFoundException("no product found with id: "+id)
         );
     }
+
+    public List<Product> findProductsByIds(List<String> ids) {
+        return productRepository.findAllById(ids);
+    }
 }

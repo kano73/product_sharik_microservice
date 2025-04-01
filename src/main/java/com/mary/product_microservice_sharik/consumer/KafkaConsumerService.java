@@ -34,6 +34,16 @@ public class KafkaConsumerService {
     @SneakyThrows
     @KafkaListener(
             topics = "#{T(com.mary.product_microservice_sharik.model.enums.KafkaTopicEnum)." +
+                    "PRODUCT_LIST_BY_IDS_TOPIC.name()}",
+            groupId = "product_group")
+    public void listOfProductsByIds(ConsumerRecord<String,String> message){
+        System.out.println("got request for list of products by ids");
+        requestProcessingService.sendProductsByIds(message);
+    }
+
+    @SneakyThrows
+    @KafkaListener(
+            topics = "#{T(com.mary.product_microservice_sharik.model.enums.KafkaTopicEnum)." +
                     "PRODUCT_SET_STATUS_TOPIC.name()}",
             groupId = "product_group")
     public void setProductStatus(ConsumerRecord<String,String> message){
