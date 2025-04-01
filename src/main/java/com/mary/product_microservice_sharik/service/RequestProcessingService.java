@@ -25,78 +25,68 @@ public class RequestProcessingService {
     private final ObjectMapper objectMapper;
 
     public void createProduct(ConsumerRecord<String, String> message) throws JsonProcessingException {
-        AddProductDTO newProductDTO;
         try {
-            newProductDTO = objectMapper.readValue(message.value(), AddProductDTO.class);
+            AddProductDTO newProductDTO = objectMapper.readValue(message.value(), AddProductDTO.class);
 
+            productService.create(newProductDTO);
         } catch (Exception e) {
-            sendResponse(message, "exception while parsing data from request", true);
+            sendResponse(message, "Unable to get products: " + e.getMessage(),true);
             return;
         }
-        // Обрабатываем запрос
-        productService.create(newProductDTO);
+
         sendResponse(message, true, false);
     }
 
     public void sendProductsByFilter(ConsumerRecord<String, String> message) throws JsonProcessingException {
-        ProductSearchFilterDTO filter;
+        List<Product> products;
         try {
-            filter = objectMapper.readValue(message.value(), ProductSearchFilterDTO.class);
-            filter = filter == null ? ProductSearchFilterDTO.defaultFilter(): filter;
+            ProductSearchFilterDTO filter = objectMapper.readValue(message.value(), ProductSearchFilterDTO.class);
+            if(filter==null) filter = ProductSearchFilterDTO.defaultFilter();
+
+            products = productService.findProductsByFilterOnPage(filter);
         } catch (Exception e) {
-            sendResponse(message, "exception while parsing data from request", true);
+            sendResponse(message, "Unable to get products: " + e.getMessage(),true);
             return;
         }
-        // Обрабатываем запрос
-        List<Product> products = productService.findProductsByFilterOnPage(filter);
-
         sendResponse(message, products, false);
     }
 
     public void sendProductById(ConsumerRecord<String, String> message) throws JsonProcessingException {
-        String id;
+        Product product;
         try {
-            id = objectMapper.readValue(message.value(), String.class);
+            String id = objectMapper.readValue(message.value(), String.class);
 
+            product = productService.findById(id);
         } catch (Exception e) {
-            sendResponse(message, "exception while parsing data from request",true);
+            sendResponse(message, "Unable to get product: " + e.getMessage(),true);
             return;
         }
-
-        // Обрабатываем запрос
-        Product product = productService.findById(id);
-
         sendResponse(message, product, false);
     }
 
     public void sendProductsByIds(ConsumerRecord<String, String> message) throws JsonProcessingException {
-        List<String> ids;
+        List<Product> products;
         try {
             CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, String.class);
-            ids = objectMapper.readValue(message.value(), listType);
+            List<String> ids = objectMapper.readValue(message.value(), listType);
+
+            products = productService.findProductsByIds(ids);
         } catch (Exception e) {
-            sendResponse(message, "exception while parsing data from request",true);
+            sendResponse(message, "Unable to get products: " + e.getMessage(),true);
             return;
         }
-
-        // Обрабатываем запрос
-        List<Product> products = productService.findProductsByIds(ids);
-
         sendResponse(message, products, false);
     }
 
     public void setProductStatus(ConsumerRecord<String, String> message) throws JsonProcessingException {
-        SetProductStatusDTO productStatusDTO;
         try {
-            productStatusDTO = objectMapper.readValue(message.value(), SetProductStatusDTO.class);
+            SetProductStatusDTO productStatusDTO = objectMapper.readValue(message.value(), SetProductStatusDTO.class);
+
+            productService.setProductStatus(productStatusDTO);
         } catch (Exception e) {
-            sendResponse(message, "exception while parsing data from request", true);
+            sendResponse(message, "Unable to set product status: " + e.getMessage(),true);
             return;
         }
-
-        // Обрабатываем запрос
-        productService.setProductStatus(productStatusDTO);
-
         sendResponse(message, true, false);
     }
 
