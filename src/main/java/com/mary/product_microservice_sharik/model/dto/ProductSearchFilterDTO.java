@@ -3,8 +3,7 @@ package com.mary.product_microservice_sharik.model.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import com.mary.product_microservice_sharik.config.PriceProperties;
-import com.mary.product_microservice_sharik.model.enums.SortProductByEnum;
+import com.mary.product_microservice_sharik.model.enumClass.SortProductByEnum;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Min;
@@ -13,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Sort;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +22,9 @@ public class ProductSearchFilterDTO {
     @Size(max = 200, message = "name length must be greater than 2 and less than 200")
     private String nameAndDescription ;
 
-    private Double priceFrom ;
+    private BigDecimal priceFrom ;
 
-    private Double priceTo ;
+    private BigDecimal priceTo ;
 
     private List<String> categories ;
 
@@ -40,16 +40,16 @@ public class ProductSearchFilterDTO {
     @JsonCreator
     public ProductSearchFilterDTO(
             @JsonProperty("nameAndDescription") String nameAndDescription,
-            @JsonProperty("priceFrom") Double priceFrom,
-            @JsonProperty("priceTo") Double priceTo,
+            @JsonProperty("priceFrom") BigDecimal priceFrom,
+            @JsonProperty("priceTo") BigDecimal priceTo,
             @JsonProperty("categories") List<String> categories,
             @JsonProperty("page") Integer page,
             @JsonProperty("sortBy") SortProductByEnum sortBy,
             @JsonProperty("sortDirection") Sort.Direction sortDirection) {
 
         this.nameAndDescription = (nameAndDescription == null || nameAndDescription.isEmpty()) ? "" : nameAndDescription;
-        this.priceFrom = priceFrom == null ? null : priceFrom * (int) Math.pow(10, PriceProperties.AFTER_COMA);
-        this.priceTo = priceTo == null ? null : priceTo * (int) Math.pow(10, PriceProperties.AFTER_COMA);
+        this.priceFrom = priceFrom;
+        this.priceTo = priceTo;
         this.categories = (categories == null) ? new ArrayList<>() : categories;
         this.page = (page == null || page < 1) ? 1 : page;
         this.sortBy = (sortBy == null) ? SortProductByEnum.NAME : sortBy;

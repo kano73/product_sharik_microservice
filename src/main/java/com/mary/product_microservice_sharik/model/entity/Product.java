@@ -2,25 +2,34 @@ package com.mary.product_microservice_sharik.model.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
 @Document(collection = "products")
-public class Product implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 2L;
-
+public class Product{
     @Id
     private String id;
+
+    @TextIndexed
     private String name;
-    private Integer price;
-    private Integer amountLeft;
+
+    @Indexed
+    private BigDecimal price;
+
+    @TextIndexed
     private String description;
-    private String imageUrl;
+
+    @Indexed
     private List<String> categories;
+
+    private Integer amountLeft;
+
+    private String imageUrl;
+
     private boolean isAvailable;
 }

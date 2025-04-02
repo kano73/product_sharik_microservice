@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductRepository extends MongoRepository<Product, String> {
@@ -22,6 +23,6 @@ public interface ProductRepository extends MongoRepository<Product, String> {
             + " { 'categories': { $in: ?3 } } ] } "
             + " ] }")
     Page<Product> searchProductsByFilter(String nameOrDescription,
-                                         Integer priceFrom, Integer priceTo,
+                                         BigDecimal priceFrom, BigDecimal priceTo,
                                          List<String> categories, Pageable pageable);
 }

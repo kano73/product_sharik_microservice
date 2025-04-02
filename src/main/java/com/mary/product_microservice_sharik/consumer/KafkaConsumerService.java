@@ -15,7 +15,7 @@ public class KafkaConsumerService {
 
     @SneakyThrows
     @KafkaListener(
-            topics = "#{T(com.mary.product_microservice_sharik.model.enums.KafkaTopicEnum)." +
+            topics = "#{T(com.mary.product_microservice_sharik.model.enumClass.KafkaTopicEnum)." +
                     "PRODUCT_BY_FILTER_TOPIC.name()}",
             groupId = "product_group")
     public void productsByFilter(ConsumerRecord<String, String> message){
@@ -24,7 +24,7 @@ public class KafkaConsumerService {
 
     @SneakyThrows
     @KafkaListener(
-            topics = "#{T(com.mary.product_microservice_sharik.model.enums.KafkaTopicEnum)." +
+            topics = "#{T(com.mary.product_microservice_sharik.model.enumClass.KafkaTopicEnum)." +
                     "PRODUCT_BY_ID_TOPIC.name()}",
             groupId = "product_group")
     public void productById(ConsumerRecord<String,String> message){
@@ -33,7 +33,7 @@ public class KafkaConsumerService {
 
     @SneakyThrows
     @KafkaListener(
-            topics = "#{T(com.mary.product_microservice_sharik.model.enums.KafkaTopicEnum)." +
+            topics = "#{T(com.mary.product_microservice_sharik.model.enumClass.KafkaTopicEnum)." +
                     "PRODUCT_LIST_BY_IDS_TOPIC.name()}",
             groupId = "product_group")
     public void listOfProductsByIds(ConsumerRecord<String,String> message){
@@ -42,7 +42,7 @@ public class KafkaConsumerService {
 
     @SneakyThrows
     @KafkaListener(
-            topics = "#{T(com.mary.product_microservice_sharik.model.enums.KafkaTopicEnum)." +
+            topics = "#{T(com.mary.product_microservice_sharik.model.enumClass.KafkaTopicEnum)." +
                     "PRODUCT_SET_STATUS_TOPIC.name()}",
             groupId = "product_group")
     public void setProductStatus(ConsumerRecord<String,String> message){
@@ -51,7 +51,7 @@ public class KafkaConsumerService {
 
     @SneakyThrows
     @KafkaListener(
-            topics = "#{T(com.mary.product_microservice_sharik.model.enums.KafkaTopicEnum)." +
+            topics = "#{T(com.mary.product_microservice_sharik.model.enumClass.KafkaTopicEnum)." +
                     "PRODUCT_CREATE_TOPIC.name()}",
             groupId = "product_group")
     public void createProduct(ConsumerRecord<String,String> message){

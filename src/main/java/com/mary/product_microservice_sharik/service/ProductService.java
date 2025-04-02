@@ -1,6 +1,5 @@
 package com.mary.product_microservice_sharik.service;
 
-import com.mary.product_microservice_sharik.config.PriceProperties;
 import com.mary.product_microservice_sharik.exception.NoDataFoundException;
 import com.mary.product_microservice_sharik.model.dto.AddProductDTO;
 import com.mary.product_microservice_sharik.model.dto.ProductSearchFilterDTO;
@@ -27,13 +26,11 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public List<Product> findProductsByFilterOnPage(@NotNull ProductSearchFilterDTO dto) {
-        Integer priceFrom = dto.getPriceFrom()==null? null : dto.getPriceFrom().intValue();
-        Integer priceTo = dto.getPriceTo()==null? null : dto.getPriceTo().intValue();
 
         return productRepository.searchProductsByFilter(
                 dto.getNameAndDescription(),
-                priceFrom,
-                priceTo,
+                dto.getPriceFrom(),
+                dto.getPriceTo(),
                 dto.getCategories(),
                 PageRequest.of(
                         dto.getPage()-1,
@@ -58,8 +55,6 @@ public class ProductService {
         product.setDescription(dto.getDescription());
         product.setAmountLeft(dto.getAmountLeft());
         product.setImageUrl(dto.getImageUrl());
-
-        product.setPrice((int) Math.round(dto.getPrice()) * (int) Math.pow(10, PriceProperties.AFTER_COMA));
 
         productRepository.save(product);
     }

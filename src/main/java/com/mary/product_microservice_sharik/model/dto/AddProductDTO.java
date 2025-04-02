@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -16,7 +17,7 @@ public class AddProductDTO {
     @Size(min = 2, max = 200)
     private String name;
     @DecimalMin("0")
-    private Double price;
+    private BigDecimal price;
     @Min(0)
     private Integer amountLeft;
     @NotBlank

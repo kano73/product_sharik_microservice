@@ -1,4 +1,4 @@
-package com.mary.product_microservice_sharik.model.enums;
+package com.mary.product_microservice_sharik.model.enumClass;
 
 public enum KafkaTopicEnum {
     // PRODUCT
