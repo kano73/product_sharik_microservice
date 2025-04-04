@@ -8,6 +8,7 @@ import com.mary.product_microservice_sharik.model.dto.ProductSearchFilterDTO;
 import com.mary.product_microservice_sharik.model.dto.SetProductStatusDTO;
 import com.mary.product_microservice_sharik.model.entity.Product;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class RequestProcessingService {
@@ -67,11 +69,18 @@ public class RequestProcessingService {
     public void sendProductsByIds(ConsumerRecord<String, String> message) throws JsonProcessingException {
         List<Product> products;
         try {
+            log.info("gonna parse ids");
             CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, String.class);
             List<String> ids = objectMapper.readValue(message.value(), listType);
+            log.info("ids: {}", ids);
 
+            log.info("gonna read from db");
             products = productService.findProductsByIds(ids);
+
+            log.info("products: {}", products);
         } catch (Exception e) {
+            log.error("Unable to get products: {}", e.getMessage(), e);
+
             sendResponse(message, "Unable to get products: " + e.getMessage(),true);
             return;
         }

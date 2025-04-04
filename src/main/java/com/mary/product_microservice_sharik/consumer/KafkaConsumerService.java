@@ -3,10 +3,12 @@ package com.mary.product_microservice_sharik.consumer;
 import com.mary.product_microservice_sharik.service.RequestProcessingService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class KafkaConsumerService {
@@ -37,6 +39,8 @@ public class KafkaConsumerService {
                     "PRODUCT_LIST_BY_IDS_TOPIC.name()}",
             groupId = "product_group")
     public void listOfProductsByIds(ConsumerRecord<String,String> message){
+        log.info("got request for list of products by ids");
+
         requestProcessingService.sendProductsByIds(message);
     }
 
