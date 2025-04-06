@@ -39,7 +39,7 @@ public class KafkaConsumerService {
                     "PRODUCT_LIST_BY_IDS_TOPIC.name()}",
             groupId = "product_group")
     public void listOfProductsByIds(ConsumerRecord<String,String> message){
-        log.info("got request for list of products by ids");
+
 
         requestProcessingService.sendProductsByIds(message);
     }

@@ -69,15 +69,11 @@ public class RequestProcessingService {
     public void sendProductsByIds(ConsumerRecord<String, String> message) throws JsonProcessingException {
         List<Product> products;
         try {
-            log.info("gonna parse ids");
+
             CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, String.class);
             List<String> ids = objectMapper.readValue(message.value(), listType);
-            log.info("ids: {}", ids);
-
-            log.info("gonna read from db");
             products = productService.findProductsByIds(ids);
 
-            log.info("products: {}", products);
         } catch (Exception e) {
             log.error("Unable to get products: {}", e.getMessage(), e);
 
