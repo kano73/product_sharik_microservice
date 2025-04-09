@@ -26,7 +26,6 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public List<Product> findProductsByFilterOnPage(@NotNull ProductSearchFilterDTO dto) {
-
         return productRepository.searchProductsByFilter(
                 dto.getNameAndDescription(),
                 dto.getPriceFrom(),
@@ -47,7 +46,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public void create(@Valid @NotNull AddProductDTO dto) {
+    public void create(@NotNull @Valid AddProductDTO dto) {
         Product product = new Product();
         product.setAvailable(false);
         product.setCategories(dto.getCategories());
