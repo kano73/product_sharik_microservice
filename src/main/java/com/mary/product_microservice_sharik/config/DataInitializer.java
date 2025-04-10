@@ -9,7 +9,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,13 +17,13 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class DataInitializer implements ApplicationRunner{
+public class DataInitializer implements ApplicationRunner {
 
     private final ProductRepository productRepository;
 
     @Override
     public void run(ApplicationArguments args) {
-        if(productRepository.count() > 0){
+        if (productRepository.count() > 0) {
             return;
         }
 
@@ -42,7 +41,7 @@ public class DataInitializer implements ApplicationRunner{
 
             List<String> categoriesOfProduct = new ArrayList<>();
             for (String category : categories) {
-                if(ThreadLocalRandom.current().nextInt(5)>2){
+                if (ThreadLocalRandom.current().nextInt(5) > 2) {
                     categoriesOfProduct.add(category);
                 }
             }

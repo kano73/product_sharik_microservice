@@ -20,10 +20,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class ProductService {
+    private final ProductRepository productRepository;
     @Value("${page.size.product}")
     private Integer PAGE_SIZE;
-
-    private final ProductRepository productRepository;
 
     public List<Product> findProductsByFilterOnPage(@NotNull ProductSearchFilterDTO dto) {
         return productRepository.searchProductsByFilter(
@@ -31,17 +30,14 @@ public class ProductService {
                 dto.getPriceFrom(),
                 dto.getPriceTo(),
                 dto.getCategories(),
-                PageRequest.of(
-                        dto.getPage()-1,
-                        PAGE_SIZE,
-                        Sort.by(dto.getSortDirection() ,dto.getSortBy().toString().toLowerCase()))
-        ).getContent();
+                PageRequest.of(dto.getPage() - 1, PAGE_SIZE,
+                        Sort.by(dto.getSortDirection(), dto.getSortBy().toString().toLowerCase())))
+                .getContent();
     }
 
     public void setProductStatus(@Valid @NotNull SetProductStatusDTO dto) {
-        Product product = productRepository.findById(dto.getProductId()).orElseThrow(
-                ()-> new NoDataFoundException("no product found with id: "+dto.getProductId())
-        );
+        Product product = productRepository.findById(dto.getProductId()).orElseThrow(() ->
+                new NoDataFoundException("no product found with id: " + dto.getProductId()));
         product.setAvailable(dto.getStatus());
         productRepository.save(product);
     }
@@ -59,9 +55,8 @@ public class ProductService {
     }
 
     public Product findById(@NotBlank String id) {
-        return productRepository.findById(id).orElseThrow(
-                () -> new NoDataFoundException("no product found with id: "+id)
-        );
+        return productRepository.findById(id).orElseThrow(() ->
+                new NoDataFoundException("no product found with id: " + id));
     }
 
     public List<Product> findProductsByIds(List<String> ids) {

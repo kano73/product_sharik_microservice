@@ -32,7 +32,7 @@ public class RequestProcessingService {
 
             productService.create(newProductDTO);
         } catch (Exception e) {
-            sendResponse(message, "Unable to get products: " + e.getMessage(),true);
+            sendResponse(message, "Unable to get products: " + e.getMessage(), true);
             return;
         }
 
@@ -43,11 +43,11 @@ public class RequestProcessingService {
         List<Product> products;
         try {
             ProductSearchFilterDTO filter = objectMapper.readValue(message.value(), ProductSearchFilterDTO.class);
-            if(filter==null) filter = ProductSearchFilterDTO.defaultFilter();
+            if (filter == null) filter = ProductSearchFilterDTO.defaultFilter();
 
             products = productService.findProductsByFilterOnPage(filter);
         } catch (Exception e) {
-            sendResponse(message, "Unable to get products: " + e.getMessage(),true);
+            sendResponse(message, "Unable to get products: " + e.getMessage(), true);
             return;
         }
         sendResponse(message, products, false);
@@ -60,7 +60,7 @@ public class RequestProcessingService {
 
             product = productService.findById(id);
         } catch (Exception e) {
-            sendResponse(message, "Unable to get product: " + e.getMessage(),true);
+            sendResponse(message, "Unable to get product: " + e.getMessage(), true);
             return;
         }
         sendResponse(message, product, false);
@@ -77,7 +77,7 @@ public class RequestProcessingService {
         } catch (Exception e) {
             log.error("Unable to get products: {}", e.getMessage(), e);
 
-            sendResponse(message, "Unable to get products: " + e.getMessage(),true);
+            sendResponse(message, "Unable to get products: " + e.getMessage(), true);
             return;
         }
         sendResponse(message, products, false);
@@ -89,7 +89,7 @@ public class RequestProcessingService {
 
             productService.setProductStatus(productStatusDTO);
         } catch (Exception e) {
-            sendResponse(message, "Unable to set product status: " + e.getMessage(),true);
+            sendResponse(message, "Unable to set product status: " + e.getMessage(), true);
             return;
         }
         sendResponse(message, true, false);
@@ -100,18 +100,20 @@ public class RequestProcessingService {
 
         // Создаем ответное сообщение
         Message<String> reply;
-        if(isError){
-            reply = MessageBuilder
-                    .withPayload(resultJson)
+        if (isError) {
+            reply = MessageBuilder.withPayload(resultJson)
                     .setHeader(KafkaHeaders.EXCEPTION_MESSAGE, resultJson)
-                    .setHeader(KafkaHeaders.TOPIC, message.headers().lastHeader(KafkaHeaders.REPLY_TOPIC).value())
-                    .setHeader(KafkaHeaders.CORRELATION_ID, message.headers().lastHeader(KafkaHeaders.CORRELATION_ID).value())
+                    .setHeader(KafkaHeaders.TOPIC, message.headers()
+                            .lastHeader(KafkaHeaders.REPLY_TOPIC).value())
+                    .setHeader(KafkaHeaders.CORRELATION_ID, message.headers()
+                            .lastHeader(KafkaHeaders.CORRELATION_ID).value())
                     .build();
-        }else{
-            reply = MessageBuilder
-                    .withPayload(resultJson)
-                    .setHeader(KafkaHeaders.TOPIC, message.headers().lastHeader(KafkaHeaders.REPLY_TOPIC).value())
-                    .setHeader(KafkaHeaders.CORRELATION_ID, message.headers().lastHeader(KafkaHeaders.CORRELATION_ID).value())
+        } else {
+            reply = MessageBuilder.withPayload(resultJson)
+                    .setHeader(KafkaHeaders.TOPIC, message.headers()
+                            .lastHeader(KafkaHeaders.REPLY_TOPIC).value())
+                    .setHeader(KafkaHeaders.CORRELATION_ID, message.headers()
+                            .lastHeader(KafkaHeaders.CORRELATION_ID).value())
                     .build();
         }
         // Отправляем ответ в reply-topic
