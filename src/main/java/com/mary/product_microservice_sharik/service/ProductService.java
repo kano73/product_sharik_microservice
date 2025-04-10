@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    @Value("${page.size.product}")
+    @Value("${page.size.product:9}")
     private Integer PAGE_SIZE;
 
     public List<Product> findProductsByFilterOnPage(@NotNull ProductSearchFilterDTO dto) {
